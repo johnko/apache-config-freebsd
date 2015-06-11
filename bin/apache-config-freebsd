@@ -19,7 +19,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date -u +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150611-075324
+SCRIPTVERSION=150611-205807
 
 ######################################################################
 # Variables
@@ -78,6 +78,9 @@ EOF
     BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
     # See /usr/local/etc/apache24/extra/httpd-ssl.conf for more
 
+    AcceptPathInfo On
+    AddType application/x-httpd-php .php
+    DirectoryIndex index.php
     Alias /horde /usr/local/www/horde
     # http://wiki.horde.org/ActiveSync
     Alias /Microsoft-Server-ActiveSync /usr/local/www/horde/rpc.php
