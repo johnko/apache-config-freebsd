@@ -36,6 +36,7 @@ configure_apache() {
     cat ${APACHECONF}.sample \
         | sed 's/#LoadModule ssl_module libexec\/apache24\/mod_ssl.so/LoadModule ssl_module libexec\/apache24\/mod_ssl.so/' \
         | sed 's/#LoadModule socache_shmcb_module libexec\/apache24\/mod_socache_shmcb.so/LoadModule socache_shmcb_module libexec\/apache24\/mod_socache_shmcb.so/' \
+        | sed 's/Listen 80/#Listen 80/' \
         >${APACHECONF}
     chmod 644 ${APACHECONF}
     ########## ########## ########## ##########
