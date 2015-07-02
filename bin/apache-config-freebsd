@@ -19,7 +19,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date -u +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150613-193856
+SCRIPTVERSION=150702-073205
 
 ######################################################################
 # Variables
@@ -170,6 +170,57 @@ EOF
         RewriteRule ^/owncloud/remote/(.*) /owncloud/remote.php [QSA,L]
     </IfModule>
     Options -Indexes
+
+</VirtualHost>
+EOF
+    ########## ########## ########## ##########
+    cat >${APACHECONF%/*}/extra/example-piwik.conf <<EOF
+    # example piwik
+    # things to change:
+    #   localhost.my.domain
+<VirtualHost *:443>
+    # Required modules: mod_log_config, mod_setenvif, mod_ssl,
+    #          socache_shmcb_module (for default value of SSLSessionCache)
+    SSLSessionCacheTimeout  300
+    DocumentRoot "/usr/local/www/apache24/data"
+    ServerName localhost.my.domain:443
+    ServerAdmin postmaster@localhost.my.domain
+    ErrorLog "/var/log/httpd-error-localhost.my.domain.log"
+    CustomLog "/var/log/httpd-access-localhost.my.domain.log" combined
+    SSLEngine on
+    SSLCertificateFile "${ssldir}/server.crt"
+    SSLCertificateKeyFile "${ssldir}/server.key"
+    <FilesMatch "\.(cgi|shtml|phtml|php)\$">
+        SSLOptions +StdEnvVars
+    </FilesMatch>
+    BrowserMatch "MSIE [2-6]" \
+        nokeepalive ssl-unclean-shutdown \
+        downgrade-1.0 force-response-1.0
+    # MSIE 7 and newer should be able to use keepalive
+    BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+    # See /usr/local/etc/apache24/extra/httpd-ssl.conf for more
+    <FilesMatch "\.php\$">
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+    <FilesMatch "\.phps\$">
+        SetHandler application/x-httpd-php-source
+    </FilesMatch>
+
+    AcceptPathInfo On
+    DirectoryIndex index.php
+    Alias /piwik /usr/local/www/piwik
+    <Directory /usr/local/www/piwik>
+        AllowOverride None
+        Options Indexes FollowSymLinks
+        # Apache 2.4 no longer accepts "Order" or "Allow from ..."
+        <IfVersion < 2.3>
+	        order allow,deny
+	        allow from all
+        </IfVersion>
+        <IfVersion >= 2.3>
+	        Require all granted
+        </IfVersion>
+    </Directory>
 
 </VirtualHost>
 EOF
