@@ -18,12 +18,4 @@ for i in `ls -1 ${REPODIR}${ETCAPACHEDIR}/Includes` ; do
   fi
 done
 
-for i in `ls -1 ${REPODIR}${ETCAPACHEDIR}/extra` ; do
-  if [ -f       ${REPODIR}${ETCAPACHEDIR}/extra/${i} ]; then
-      install -m 644 \
-                ${REPODIR}${ETCAPACHEDIR}/extra/${i} \
-                          ${ETCAPACHEDIR}/extra/${i}
-  fi
-done
-
 apache-openssl-generate
