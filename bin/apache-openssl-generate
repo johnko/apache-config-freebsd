@@ -18,7 +18,7 @@ if [ ! -e "${SSLDIR}/dhparam.pem" ]; then
 fi
 if [ ! -e "${SSLDIR}/ssl.key" ]; then
     if [ -e /usr/local/etc/nginx/ssl/ssl.key ]; then
-        install -m 600 /usr/local/etc/nginx/ssl/ssl.key "${ssldir}/ssl.key"
+        install -m 600 /usr/local/etc/nginx/ssl/ssl.key "${SSLDIR}/ssl.key"
     else
         openssl genrsa -out "${SSLDIR}/ssl.key" 4096
     fi
@@ -26,7 +26,7 @@ if [ ! -e "${SSLDIR}/ssl.key" ]; then
 fi
 if [ ! -e "${SSLDIR}/ssl.csr" ]; then
     if [ -e /usr/local/etc/nginx/ssl/ssl.csr ]; then
-        install -m 600 /usr/local/etc/nginx/ssl/ssl.csr "${ssldir}/ssl.csr"
+        install -m 600 /usr/local/etc/nginx/ssl/ssl.csr "${SSLDIR}/ssl.csr"
     else
         yes '' | openssl req -sha256 -new -key "${SSLDIR}/ssl.key" -out "${SSLDIR}/ssl.csr"
     fi
@@ -37,10 +37,10 @@ umask 022
 
 if [ ! -e "${SSLDIR}/ssl.crt" ]; then
     if [ -e /usr/local/etc/nginx/ssl/ssl.crt ]; then
-        install -m 640 /usr/local/etc/nginx/ssl/ssl.crt "${ssldir}/ssl.crt"
+        install -m 640 /usr/local/etc/nginx/ssl/ssl.crt "${SSLDIR}/ssl.crt"
     else
         openssl x509 -req -sha256 -days 365 -in "${SSLDIR}/ssl.csr" -signkey "${SSLDIR}/ssl.key" -out "${SSLDIR}/ssl.crt"
     fi
-    cat "${ssldir}/dhparam.pem" >>"${ssldir}/ssl.crt"
+    cat "${SSLDIR}/dhparam.pem" >>"${SSLDIR}/ssl.crt"
     chmod 640 "${SSLDIR}/ssl.crt"
 fi
