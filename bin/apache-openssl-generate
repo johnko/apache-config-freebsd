@@ -1,0 +1,46 @@
+#!/bin/sh
+
+SSLDIR=/usr/local/etc/apache24
+
+if [ ! -d "${SSLDIR}" ]; then
+    install -d -m 755 "${SSLDIR}"
+fi
+
+umask 077
+
+if [ ! -e "${SSLDIR}/dhparam.pem" ]; then
+    if [ -e /usr/local/etc/nginx/ssl/dhparam.pem ]; then
+        install -m 600 /usr/local/etc/nginx/ssl/dhparam.pem "${SSLDIR}/dhparam.pem"
+    else
+        openssl dhparam -out "${SSLDIR}/dhparam.pem" 2048
+    fi
+    chmod 600 "${SSLDIR}/dhparam.pem"
+fi
+if [ ! -e "${SSLDIR}/ssl.key" ]; then
+    if [ -e /usr/local/etc/nginx/ssl/ssl.key ]; then
+        install -m 600 /usr/local/etc/nginx/ssl/ssl.key "${ssldir}/ssl.key"
+    else
+        openssl genrsa -out "${SSLDIR}/ssl.key" 4096
+    fi
+    chmod 600 "${SSLDIR}/ssl.key"
+fi
+if [ ! -e "${SSLDIR}/ssl.csr" ]; then
+    if [ -e /usr/local/etc/nginx/ssl/ssl.csr ]; then
+        install -m 600 /usr/local/etc/nginx/ssl/ssl.csr "${ssldir}/ssl.csr"
+    else
+        yes '' | openssl req -sha256 -new -key "${SSLDIR}/ssl.key" -out "${SSLDIR}/ssl.csr"
+    fi
+    chmod 600 "${SSLDIR}/ssl.csr"
+fi
+
+umask 022
+
+if [ ! -e "${SSLDIR}/ssl.crt" ]; then
+    if [ -e /usr/local/etc/nginx/ssl/ssl.crt ]; then
+        install -m 640 /usr/local/etc/nginx/ssl/ssl.crt "${ssldir}/ssl.crt"
+    else
+        openssl x509 -req -sha256 -days 365 -in "${SSLDIR}/ssl.csr" -signkey "${SSLDIR}/ssl.key" -out "${SSLDIR}/ssl.crt"
+    fi
+    cat "${ssldir}/dhparam.pem" >>"${ssldir}/ssl.crt"
+    chmod 640 "${SSLDIR}/ssl.crt"
+fi
