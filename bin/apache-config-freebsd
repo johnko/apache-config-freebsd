@@ -1,6 +1,6 @@
 #!/bin/sh
 
-REPODIR=/root/git/apache-config-freebsd
+REPODIR=~/git/apache-config-freebsd
 ETCAPACHEDIR=/usr/local/etc/apache24
 
 cat ${ETCAPACHEDIR}/httpd.conf.sample \
