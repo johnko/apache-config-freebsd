@@ -12,7 +12,7 @@ chmod 644 ${ETCAPACHEDIR}/httpd.conf
 
 for i in `ls -1 ${REPODIR}${ETCAPACHEDIR}/Includes` ; do
   if [ -f       ${REPODIR}${ETCAPACHEDIR}/Includes/${i} ]; then
-      install -m 644 \
+      install -C -m 644 \
                 ${REPODIR}${ETCAPACHEDIR}/Includes/${i} \
                           ${ETCAPACHEDIR}/Includes/${i}
   fi
