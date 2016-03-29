@@ -4,9 +4,10 @@ REPODIR=~/git/apache-config-freebsd
 ETCAPACHEDIR=/usr/local/etc/apache24
 
 cat ${ETCAPACHEDIR}/httpd.conf.sample \
-    | sed 's/#LoadModule ssl_module libexec\/apache24\/mod_ssl.so/LoadModule ssl_module libexec\/apache24\/mod_ssl.so/' \
-    | sed 's/#LoadModule socache_shmcb_module libexec\/apache24\/mod_socache_shmcb.so/LoadModule socache_shmcb_module libexec\/apache24\/mod_socache_shmcb.so/' \
-    | sed 's/Listen 80/#Listen 80/' \
+    | sed 's;#LoadModule ssl_module libexec/apache24/mod_ssl.so;LoadModule ssl_module libexec/apache24/mod_ssl.so;' \
+    | sed 's;#LoadModule socache_shmcb_module libexec/apache24/mod_socache_shmcb.so;LoadModule socache_shmcb_module libexec/apache24/mod_socache_shmcb.so;' \
+    | sed 's;#LoadModule rewrite_module libexec/apache24/mod_rewrite.so;LoadModule rewrite_module libexec/apache24/mod_rewrite.so;' \
+    | sed 's;Listen 80;#Listen 80;' \
     >${ETCAPACHEDIR}/httpd.conf
 chmod 644 ${ETCAPACHEDIR}/httpd.conf
 
